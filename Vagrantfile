@@ -17,10 +17,8 @@ Vagrant.configure('2') do |config|
   SHELL_END
 
   config.vm.network "forwarded_port", guest: 80, host: 8080 # webserver
-  config.vm.network "forwarded_port", guest: 5672, host: 5672 # rabbitmq
   config.vm.network "private_network", type: "dhcp"
   config.ssh.forward_agent = true
-
 
   config.vm.provider "virtualbox" do |v|
     v.memory = 1024
