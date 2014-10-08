@@ -1,6 +1,7 @@
 - name: Install dependencies
   apt:
     pkg: "{{ item }}"
+    update_cache: yes
   with_items:
   - curl
   - bison
