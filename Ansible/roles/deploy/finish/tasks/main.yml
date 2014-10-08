@@ -1,0 +1,14 @@
+---
+- name: Link current
+  file:
+    path: "{{ app_path }}/current"
+    src: "{{ app_path }}/releases/{{ RELEASE_ID }}"
+    state: link
+    force: yes
+  notify:
+  - restart required
+
+- name: Cleanup
+  shell: "ls -dt {{ app_path }}/releases/* | egrep '[0-9]+' | tail -n +6 | xargs rm -rfv"
+  register: deploy_cleanup_result
+  changed_when: "'removed' in deploy_cleanup_result.stdout"

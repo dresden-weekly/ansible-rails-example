@@ -1,0 +1,14 @@
+
+user_name: # {{ app_user }}
+user_comment: Ansible User
+user_password: ''
+user_shell: /bin/bash
+user_authorized_key: '' # prefers ENV['AUTHORIZED_KEY']
+user_groups: []
+# - {{ user_name }}
+user_group: # {{ user_groups|first }}
+
+user_env: {}
+# DATABASE_URL: {{ DATABASE_URL }} if any host DATABASE_URL
+# AMQP_URL: {{ AMQP_URL }} if any host AMQP_URL
+# PATH: "$HOME/.rvm/bin:$PATH" if rvm_ruby

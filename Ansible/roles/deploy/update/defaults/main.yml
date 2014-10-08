@@ -1,0 +1,23 @@
+deploy_rails_archive:
+- app
+- config
+- config.ru
+- db
+- Gemfile
+- lib
+- public
+- Rakefile
+- vendor
+
+deploy_custom_archive: []
+
+deploy_shared_rails_folders:
+- bin
+- bundle
+- log
+- public/assets
+- tmp
+
+deploy_shared_custom_folders: []
+
+deploy_create_custom_folders: []

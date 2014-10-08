@@ -1,0 +1,18 @@
+- name: Allow userjobs
+  template:
+    src: Upstart.conf
+    dest: /etc/dbus-1/system.d/Upstart.conf
+    force: yes
+
+- name: Autostart userjobs
+  template:
+    src: load_user_jobs.conf
+    dest: /etc/init/load_user_jobs.conf
+
+- name: user .init folder
+  file:
+    path: ~/.init
+    state: directory
+  sudo: yes
+  sudo_user: "{{ rvm_user | default(app_user, true) }}"
+  when: rvm_user or app_user

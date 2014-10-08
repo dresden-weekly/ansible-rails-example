@@ -1,0 +1,29 @@
+---
+- hosts:
+  - app
+
+  vars:
+    remote_user: '{{ app_user }}'
+    sudo: yes
+    sudo_user: '{{ remote_user }}'
+    ruby_bin: '~/.rvm/bin/rvm default do '
+    profile: '. $HOME/.profile && sh $HOME/.profile && '
+
+  pre_tasks:
+  - name: Check previous deploy
+    stat:
+      path: "{{ app_path }}/current"
+    register: deploy_current
+
+  - set_fact:
+      run_restart: "{{ deploy_current.stat.exists }}"
+
+  - name: Trigger restart
+    file:
+      path: "{{ app_path }}/restart.txt"
+      state: touch
+    when: run_restart | bool
+
+  roles:
+  - role: puma/restart
+    when: run_restart | bool

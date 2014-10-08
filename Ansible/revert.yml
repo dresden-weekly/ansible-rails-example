@@ -1,0 +1,34 @@
+---
+- hosts:
+  - app
+  - web
+
+  vars:
+    remote_user: '{{ app_user }}'
+    sudo: yes
+    sudo_user: '{{ remote_user }}'
+    ruby_bin: '~/.rvm/bin/rvm default do '
+    profile: '. $HOME/.profile && sh $HOME/.profile && '
+    is_vagrant: "{{ 'vagrant' in groups }}"
+
+  pre_tasks:
+  - name: Check previous deploy
+    stat:
+      path: "{{ app_path }}/current"
+    register: deploy_current
+
+  - set_fact:
+      run_deploy: "{{ not (is_vagrant | bool) and (deploy_current.stat.exists) }}"
+
+  roles:
+  - role: deploy/revert
+    when: run_deploy | bool
+
+  - role: deploy/rails
+    when: run_deploy | bool
+
+  - role: deploy/finish
+    when: run_deploy | bool
+
+  - role: puma/restart
+    when: run_deploy | bool

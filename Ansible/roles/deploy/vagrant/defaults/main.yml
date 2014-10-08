@@ -1,0 +1,28 @@
+
+vagrant_create_rails_folders:
+- db
+- public
+
+vagrant_create_custom_folders: []
+
+vagrant_rails_links:
+- app
+- config
+- config.ru
+- db/migrate
+- Gemfile
+- lib
+- Rakefile
+- vendor
+- public/favicon.ico
+- public/robots.txt
+
+vagrant_custom_links: []
+
+vagrant_rails_syncs:
+- public
+
+vagrant_custom_syncs: []
+
+# path relative to this folder
+local_app_path: ../../../../..

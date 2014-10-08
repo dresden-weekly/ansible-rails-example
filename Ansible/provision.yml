@@ -1,0 +1,33 @@
+---
+- hosts: db
+  roles:
+  - postgresql
+
+- hosts: app
+  roles:
+  - role: deploy/user
+    user_env:
+      SECRET_KEY_BASE: '{{ app_secret_key_base }}'
+      RAILS_LOG_FILE_PATH: '{{ app_path }}/shared/log/'
+    user_authorized_key: "{{ lookup('file', 'id_rsa.pub') }}"
+  - deploy/prepare
+  - ruby/rvm
+  - ruby/postgresql
+  - upstart/userjobs
+  - puma/upstart
+
+- hosts: web
+  roles:
+  - role: deploy/user
+    user_env:
+      DATABASE_URL: # no database access needed
+    user_authorized_key: "{{ lookup('file', 'id_rsa.pub') }}"
+  - deploy/prepare
+  - nginx/server
+  - nginx/puma
+
+- include: deploy.yml
+  vars:
+    provisioned: yes
+    sudo: yes
+    sudo_user: "{{ app_user }}"

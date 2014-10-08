@@ -1,0 +1,37 @@
+---
+- name: Define release id
+  set_fact:
+    RELEASE_ID: vagrant
+
+- name: Create release
+  file:
+    path: "{{ app_path }}/releases/{{ RELEASE_ID }}"
+    state: directory
+
+- name: Create custom folders
+  file:
+    path: "{{ app_path }}/releases/{{ RELEASE_ID }}/{{ item }}"
+    state: directory
+  with_flattened:
+  - vagrant_create_rails_folders
+  - vagrant_create_custom_folders
+
+- name: Links to vagrant
+  file:
+    dest: "{{ app_path }}/releases/{{ RELEASE_ID }}/{{ item }}"
+    src: "/vagrant/{{ item }}"
+    state: link
+  with_flattened:
+  - vagrant_rails_links
+  - vagrant_custom_links
+
+# - name: Synchronize files (none recursive)
+#   file:
+#     dest: "{{ app_path }}/releases/{{ RELEASE_ID }}"
+#     src: "{{ local_app_path }}/{{ item }}"
+#     state: link
+#   with_flattened:
+#   - vagrant_rails_syncs
+#   - vagrant_custom_syncs
+
+- include: ../../update/tasks/shared_folders.yml
