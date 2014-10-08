@@ -13,6 +13,8 @@ Vagrant.configure('2') do |config|
     export SECRET_KEY_BASE=#{ENV['SECRET_KEY_BASE']}
     export PROVISION_ARGS=#{ENV['PROVISION_ARGS']}
     export ANSIBLE_HOST_KEY_CHECKING=False
+    export BASE_FOLDER=/vagrant/ansible
+    export ANSIBLE_DIR=/opt/ansible
     exec /vagrant/ansible/run.sh #{provision_target} #{provision_action}
   SHELL_END
 
