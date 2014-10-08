@@ -5,4 +5,4 @@ app_domain: "{{ ansible_all_ipv4_addresses | last }}"
 bundle_without:
 - test
 
-compile_assets: "{{ lookup('env', 'COMPILE_ASSETS') | default(false, true) }}"
+# compile_assets: "{{ lookup('env', 'COMPILE_ASSETS') | default(false, true) }}"
