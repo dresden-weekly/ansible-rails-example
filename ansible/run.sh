@@ -37,6 +37,7 @@ fi
 
 echo "Running Ansible"
 export PYTHONUNBUFFERED=1
+export ANSIBLE_FORCE_COLOR=true
 cp $ANSIBLE_HOSTS $TEMP_HOSTS && chmod -x $TEMP_HOSTS
 cd $ANSIBLE_DIR
 source hacking/env-setup

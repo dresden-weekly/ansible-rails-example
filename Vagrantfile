@@ -7,7 +7,7 @@ provision_action = ENV['PROVISION_ACTION'] || 'provision' # valid: deploy, app_r
 Vagrant.configure('2') do |config|
   config.vm.box = "hashicorp/precise64"
 
-  config.vm.provision :shell, inline: <<-SHELL_END
+  config.vm.provision :shell, keep_color: true, inline: <<-SHELL_END
     export REPO_USER=#{ENV['REPO_USER']}
     export REPO_PASSWORD=#{ENV['REPO_PASSWORD']}
     export SECRET_KEY_BASE=#{ENV['SECRET_KEY_BASE']}
