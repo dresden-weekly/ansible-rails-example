@@ -1,3 +1,0 @@
----
-- name: restart generator
-  shell: start generator || restart generator

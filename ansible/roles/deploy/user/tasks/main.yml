@@ -37,43 +37,7 @@
     line: "export DATABASE_URL={{ hostvars[groups['db'][0]].DATABASE_URL }}"
   sudo: true
   sudo_user: "{{ user_name | default(app_user, true) }}"
-  when: (not 'DATABASE_URL' in user_env) and groups['db'] and ('DATABASE_URL' in hostvars[groups['generator'][0]])
-
-- name: Export AMQP_GENERATOR_URLs
-  lineinfile:
-    dest: ~/.profile
-    regexp: "^export AMQP_GENERATOR_URL="
-    line: "export AMQP_GENERATOR_URL={{ hostvars[groups['messaging'][0]].AMQP_GENERATOR_URL }}"
-  sudo: true
-  sudo_user: "{{ user_name | default(app_user, true) }}"
-  when: (not 'AMQP_GENERATOR_URL' in user_env) and groups['messaging'] and ('AMQP_GENERATOR_URL' in hostvars[groups['generator'][0]])
-
-- name: Export AMQP_PLATFORM_URLs
-  lineinfile:
-    dest: ~/.profile
-    regexp: "^export AMQP_PLATFORM_URL="
-    line: "export AMQP_PLATFORM_URL={{ hostvars[groups['messaging'][0]].AMQP_PLATFORM_URL }}"
-  sudo: true
-  sudo_user: "{{ user_name | default(app_user, true) }}"
-  when: (not 'AMQP_PLATFORM_URL' in user_env) and groups['messaging'] and ('AMQP_PLATFORM_URL' in hostvars[groups['generator'][0]])
-
-- name: Export GENERATED_FILES_DIRECTORY
-  lineinfile:
-    dest: ~/.profile
-    regexp: "^export GENERATED_FILES_DIRECTORY="
-    line: "export GENERATED_FILES_DIRECTORY={{ hostvars[groups['generator'][0]].GENERATED_FILES_DIRECTORY }}"
-  sudo: true
-  sudo_user: "{{ user_name | default(app_user, true) }}"
-  when: (not 'GENERATED_FILES_DIRECTORY' in user_env) and groups['generator'] and ('GENERATED_FILES_DIRECTORY' in hostvars[groups['generator'][0]])
-
-- name: Export GENERATOR_EXECUTABLE
-  lineinfile:
-    dest: ~/.profile
-    regexp: "^export GENERATOR_EXECUTABLE="
-    line: "export GENERATOR_EXECUTABLE={{ hostvars[groups['generator'][0]].GENERATOR_EXECUTABLE }}"
-  sudo: true
-  sudo_user: "{{ user_name | default(app_user, true) }}"
-  when: (not 'GENERATOR_EXECUTABLE' in user_env) and groups['generator'] and ('GENERATOR_EXECUTABLE' in hostvars[groups['generator'][0]])
+  when: (not 'DATABASE_URL' in user_env) and groups['db'])
 
 - name: Export RAILS_LOG_FILE_PATH
   lineinfile:
@@ -83,15 +47,6 @@
   sudo: true
   sudo_user: "{{ user_name | default(app_user, true) }}"
   when: (not 'RAILS_LOG_FILE_PATH' in user_env) and groups['app'] and ('RAILS_LOG_FILE_PATH' in hostvars[groups['app'][0]])
-
-- name: Export GENERATOR_ENVIRONMENT_FILE
-  lineinfile:
-    dest: ~/.profile
-    regexp: "^export GENERATOR_ENVIRONMENT_FILE="
-    line: "export GENERATOR_ENVIRONMENT_FILE={{ hostvars[groups['app'][0]].GENERATOR_ENVIRONMENT_FILE }}"
-  sudo: true
-  sudo_user: "{{ user_name | default(app_user, true) }}"
-  when: (not 'GENERATOR_ENVIRONMENT_FILE' in user_env) and groups['app'] and ('GENERATOR_ENVIRONMENT_FILE' in hostvars[groups['app'][0]])
 
 - name: Add default login directory for user
   lineinfile:

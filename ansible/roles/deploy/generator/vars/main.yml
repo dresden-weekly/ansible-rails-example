@@ -1,7 +1,0 @@
-
-generator_archive_name: "{{ generator_archive_url.split('/') | last }}"
-generator_release_name: "{{ generator_archive_name.split('.')[0:-1] | join('.') }}"
-
-generator_archive_base: "{{ app_path }}/shared/generator"
-generator_release_path: "{{ generator_archive_base }}/{{ generator_release_name }}"
-generator_current_path: "{{ app_path }}/releases/{{ RELEASE_ID }}/generator_server/generator"

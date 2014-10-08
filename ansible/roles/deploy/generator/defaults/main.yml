@@ -1,3 +1,0 @@
-generator_archive_url: "{{ lookup('env', 'GENERATOR_URL') | default('missing', true) }}"
-generator_archive_user: "{{ lookup('env', 'REPO_USER') | default('deploy', true) }}"
-generator_archive_password: "{{ lookup('env', 'REPO_PASSWORD') | default('missing', true) }}"
