@@ -16,7 +16,7 @@ Vagrant.configure('2') do |config|
     exec /vagrant/ansible/run.sh #{provision_target} #{provision_action}
   SHELL_END
 
-  config.vm.network "forwarded_port", guest: 80, host: 8080 # webserver
+  config.vm.network "forwarded_port", guest: 80, host: 8081 # webserver
   config.vm.network "private_network", type: "dhcp"
   config.ssh.forward_agent = true
 
