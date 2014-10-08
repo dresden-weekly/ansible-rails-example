@@ -37,7 +37,7 @@
     line: "export DATABASE_URL={{ hostvars[groups['db'][0]].DATABASE_URL }}"
   sudo: true
   sudo_user: "{{ user_name | default(app_user, true) }}"
-  when: (not 'DATABASE_URL' in user_env) and groups['db'])
+  when: (not 'DATABASE_URL' in user_env) and groups['db']
 
 - name: Export RAILS_LOG_FILE_PATH
   lineinfile:
