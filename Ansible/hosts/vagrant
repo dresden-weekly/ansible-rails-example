@@ -4,16 +4,10 @@ localhost
 [vagrant:vars]
 ansible_connection=local
 
-[platform_app:children]
+[example_app:children]
 vagrant
 
 [db:children]
-vagrant
-
-[messaging:children]
-vagrant
-
-[generator:children]
 vagrant
 
 [app:children]
