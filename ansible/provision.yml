@@ -1,14 +1,16 @@
 ---
 - hosts: db
+  vars:
+    _: &app_user
+      name: "{{ app_user }}"
+      shell: /bin/bash
+      authorized_key: "{{ lookup('file', 'id_rsa.pub') }}"
+      bashrc_lines:
+      - "cd {{ app_path }}"
+      - "cd {{ app_path }}/current"
+
   roles:
   - postgresql
-  __unused__: &app_user
-    name: "{{ app_user }}"
-    shell: /bin/bash
-    authorized_key: "{{ lookup('file', 'id_rsa.pub') }}"
-    bashrc_lines:
-    - "cd {{ app_path }}"
-    - "cd {{ app_path }}/current"
 
 - hosts: app
   roles:
@@ -35,8 +37,7 @@
 - hosts: web
   roles:
   - role: create-user
-    user:
-      <<: *app_user
+    user: *app_user
   - rails/create-folders
   - ruby/rvm # required to compile assets
   - nginx/server

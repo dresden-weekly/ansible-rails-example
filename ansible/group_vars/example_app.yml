@@ -17,3 +17,5 @@ ruby_version: 2.1.1
 db_user: example_app
 db_password: secret
 db_name: example_app
+
+allow_vagrant: no
