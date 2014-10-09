@@ -27,17 +27,26 @@
       run_import: "{{ (is_first_deploy | bool) or (is_vagrant | bool) }}"
 
   roles:
-  - role: deploy/vagrant
+  - role: rails/use-vagrant
     when: (run_deploy | bool) and (use_vagrant_folder | bool)
 
-  - role: deploy/update
+  - role: rails/create-release
     when: (run_deploy | bool) and not (use_vagrant_folder | bool)
 
-  - role: deploy/rails
+  - role: rails/tasks/bundle
     when: run_deploy | bool
 
-  - role: deploy/finish
+  - role: rails/tasks/migrate-database
+    when: run_deploy | bool
+
+  - role: rails/tasks/compile-assets
+    when: run_deploy | bool
+
+  - role: rails/update-current
     when: run_deploy | bool
 
   - role: puma/restart
+    when: run_deploy | bool
+
+  - role: rails/cleanup-old-releases
     when: run_deploy | bool

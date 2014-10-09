@@ -37,4 +37,4 @@
     regexp: "^export RAILS_ENV="
     line: "export RAILS_ENV={{ rails_env }}"
   sudo: true
-  sudo_user: "{{ user_name | default(app_user, true) }}"
+  sudo_user: "{{ rvm_user | default(app_user, true) }}"

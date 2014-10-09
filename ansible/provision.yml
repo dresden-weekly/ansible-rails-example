@@ -2,27 +2,43 @@
 - hosts: db
   roles:
   - postgresql
+  __unused__: &app_user
+    name: "{{ app_user }}"
+    shell: /bin/bash
+    authorized_key: "{{ lookup('file', 'id_rsa.pub') }}"
+    bashrc_lines:
+    - "cd {{ app_path }}"
+    - "cd {{ app_path }}/current"
 
 - hosts: app
   roles:
-  - role: deploy/user
-    user_env:
-      SECRET_KEY_BASE: '{{ app_secret_key_base }}'
-      RAILS_LOG_FILE_PATH: '{{ app_path }}/shared/log/'
-    user_authorized_key: "{{ lookup('file', 'id_rsa.pub') }}"
-  - deploy/prepare
+  - role: create-user
+    user:
+      <<: *app_user
+      env:
+        SECRET_KEY_BASE: "{{ app_secret_key_base }}"
+        RAILS_LOG_FILE_PATH: "{{ app_path }}/shared/log/"
+      env_facts:
+      - group: db
+        index: 0
+        facts:
+        - DATABASE_URL
+  - rails/create-folders
+  - rails/logrotate
   - ruby/rvm
   - ruby/postgresql
-  - upstart/userjobs
+  - role: upstart/userjobs
+    users:
+    - "{{ app_user }}"
   - puma/upstart
 
 - hosts: web
   roles:
-  - role: deploy/user
-    user_env:
-      DATABASE_URL: # no database access needed
-    user_authorized_key: "{{ lookup('file', 'id_rsa.pub') }}"
-  - deploy/prepare
+  - role: create-user
+    user:
+      <<: *app_user
+  - rails/create-folders
+  - ruby/rvm # required to compile assets
   - nginx/server
   - nginx/puma
 

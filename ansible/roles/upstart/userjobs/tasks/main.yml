@@ -1,3 +1,6 @@
+#
+# enables upstart user jobs
+#
 - name: Allow userjobs
   template:
     src: Upstart.conf
@@ -9,10 +12,10 @@
     src: load_user_jobs.conf
     dest: /etc/init/load_user_jobs.conf
 
-- name: user .init folder
+- name: Create ~/.init folder
   file:
     path: ~/.init
     state: directory
   sudo: yes
-  sudo_user: "{{ rvm_user | default(app_user, true) }}"
-  when: rvm_user or app_user
+  sudo_user: "{{ item }}"
+  with_items: users
