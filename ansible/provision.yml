@@ -36,7 +36,7 @@
 
 - hosts: web
   roles:
-  - role: create-user
+  - role: dresden-weekly.Rails/create-user
     user: *app_user
   - dresden-weekly.Rails/rails/create-folders
   - dresden-weekly.Rails/ruby/rvm # required to compile assets
