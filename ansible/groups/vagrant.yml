@@ -1,0 +1,4 @@
+db: default
+app: default
+web: default
+example_app: default

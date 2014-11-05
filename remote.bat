@@ -34,6 +34,8 @@ set PROVISION_ARGS=%PROVISION_ARGS:\=/%
 echo Arguments: %PROVISION_ARGS%
 :no_args
 
+:: windows has no local ansible
+set VM_ANSIBLE=1
 echo vagrant provision
 vagrant provision
 
