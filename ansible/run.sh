@@ -5,6 +5,7 @@ ANSIBLE_VERSION=1.7.1
 ANSIBLE_OPTIONS=
 
 ANSIBLE_DIR=${ANSIBLE_DIR:=$HOME/ansible}
+export ANSIBLE_ROLES_PATH=${ANSIBLE_ROLES_PATH:=$ANSIBLE_DIR/roles}
 ANSIBLE_HOSTS=$BASE_FOLDER/hosts/$1
 ANSIBLE_PLAYBOOK=$BASE_FOLDER/$2.yml
 TEMP_HOSTS="/tmp/local_hosts"
@@ -34,10 +35,12 @@ if [ ! -d $ANSIBLE_DIR ]; then
   echo "Cloning Ansible"
   git clone --branch release$ANSIBLE_VERSION --depth 1 git://github.com/ansible/ansible.git $ANSIBLE_DIR
 fi
+mkdir -p $ANSIBLE_ROLES_PATH
 
 echo "Running Ansible"
 cp $ANSIBLE_HOSTS $TEMP_HOSTS && chmod -x $TEMP_HOSTS
 cd $ANSIBLE_DIR
 source hacking/env-setup
+ansible-galaxy install dresden-weekly.Rails
 ansible-playbook $ANSIBLE_OPTIONS $ANSIBLE_PLAYBOOK --inventory-file=$TEMP_HOSTS
 rm $TEMP_HOSTS
