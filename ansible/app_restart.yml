@@ -25,5 +25,5 @@
     when: run_restart | bool
 
   roles:
-  - role: puma/restart
+  - role: ansible-weekly.Rails/puma/restart
     when: run_restart | bool

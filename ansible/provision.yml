@@ -10,11 +10,11 @@
       - "cd {{ app_path }}/current"
 
   roles:
-  - postgresql
+  - dresden-weekly.Rails/postgresql
 
 - hosts: app
   roles:
-  - role: create-user
+  - role: dresden-weekly.Rails/create-user
     user:
       <<: *app_user
       env:
@@ -25,23 +25,23 @@
         index: 0
         facts:
         - DATABASE_URL
-  - rails/create-folders
-  - rails/logrotate
-  - ruby/rvm
-  - ruby/postgresql
-  - role: upstart/userjobs
+  - dresden-weekly.Rails/rails/create-folders
+  - dresden-weekly.Rails/rails/logrotate
+  - dresden-weekly.Rails/ruby/rvm
+  - dresden-weekly.Rails/ruby/postgresql
+  - role: dresden-weekly.Rails/upstart/userjobs
     users:
     - "{{ app_user }}"
-  - puma/upstart
+  - dresden-weekly.Rails/puma/upstart
 
 - hosts: web
   roles:
   - role: create-user
     user: *app_user
-  - rails/create-folders
-  - ruby/rvm # required to compile assets
-  - nginx/server
-  - nginx/puma
+  - dresden-weekly.Rails/rails/create-folders
+  - dresden-weekly.Rails/ruby/rvm # required to compile assets
+  - dresden-weekly.Rails/nginx/server
+  - dresden-weekly.Rails/nginx/puma
 
 - include: deploy.yml
   vars:

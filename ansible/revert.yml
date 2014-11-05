@@ -21,14 +21,14 @@
       run_deploy: "{{ not (is_vagrant | bool) and (deploy_current.stat.exists) }}"
 
   roles:
-  - role: deploy/revert
+  - role: dresden-weekly.Rails/deploy/revert
     when: run_deploy | bool
 
-  - role: deploy/rails
+  - role: dresden-weekly.Rails/deploy/rails
     when: run_deploy | bool
 
-  - role: deploy/finish
+  - role: dresden-weekly.Rails/deploy/finish
     when: run_deploy | bool
 
-  - role: puma/restart
+  - role: dresden-weekly.Rails/puma/restart
     when: run_deploy | bool

@@ -27,26 +27,26 @@
       run_deploy: "{{ (is_first_deploy | bool) or (not_provisioned | bool) or (use_vagrant_folder | bool) }}"
 
   roles:
-  - role: rails/use-vagrant
+  - role: dresden-weekly.Rails/rails/use-vagrant
     when: (run_deploy | bool) and (use_vagrant_folder | bool)
 
-  - role: rails/create-release
+  - role: dresden-weekly.Rails/rails/create-release
     when: (run_deploy | bool) and not (use_vagrant_folder | bool)
 
-  - role: rails/tasks/bundle
+  - role: dresden-weekly.Rails/rails/tasks/bundle
     when: run_deploy | bool
 
-  - role: rails/tasks/migrate-database
+  - role: dresden-weekly.Rails/rails/tasks/migrate-database
     when: run_deploy | bool
 
-  - role: rails/tasks/compile-assets
+  - role: dresden-weekly.Rails/rails/tasks/compile-assets
     when: run_deploy | bool
 
-  - role: rails/update-current
+  - role: dresden-weekly.Rails/rails/update-current
     when: run_deploy | bool
 
-  - role: puma/restart
+  - role: dresden-weekly.Rails/puma/restart
     when: run_deploy | bool
 
-  - role: rails/cleanup-old-releases
+  - role: dresden-weekly.Rails/rails/cleanup-old-releases
     when: run_deploy | bool
