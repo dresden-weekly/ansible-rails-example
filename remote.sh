@@ -1,13 +1,13 @@
 #!/bin/sh
 if [ ! -z "$1" ] ; then
-  if [ -s "ansible/hosts/$1" ] ; then
-    export PROVISION_TARGET=$1
-    echo Target: $1
-    shift
-  elif [ -s "ansible/groups/$1.yml" ]; then
+  if [ -s "ansible/groups/$1.yml" ]; then
     export PROVISION_GROUPS=$1
     PROVISION_VAGRANT=true
     echo Groups: $1
+    shift
+  elif [ -s "ansible/hosts/$1" ] ; then
+    export PROVISION_TARGET=$1
+    echo Target: $1
     shift
   fi
 fi
