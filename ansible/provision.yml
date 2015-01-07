@@ -1,5 +1,6 @@
 ---
 - hosts: db
+  sudo: yes
   vars:
     _: &app_user
       name: "{{ app_user }}"
@@ -13,6 +14,7 @@
   - dresden-weekly.Rails/postgresql
 
 - hosts: app
+  sudo: yes
   roles:
   - role: dresden-weekly.Rails/create-user
     user:
@@ -35,6 +37,7 @@
   - dresden-weekly.Rails/puma/upstart
 
 - hosts: web
+  sudo: yes
   roles:
   - role: dresden-weekly.Rails/create-user
     user: *app_user
@@ -44,7 +47,7 @@
   - dresden-weekly.Rails/nginx/puma
 
 - include: deploy.yml
+  sudo: yes
+  sudo_user: "{{ app_user }}"
   vars:
     provisioned: yes
-    sudo: yes
-    sudo_user: "{{ app_user }}"

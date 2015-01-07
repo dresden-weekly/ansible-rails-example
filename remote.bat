@@ -1,41 +1,32 @@
 @echo off
+:: This script should be placed in the root of your project
 SETLOCAL ENABLEEXTENSIONS
-set OLD_CD=%CD%
-cd /D "%~dp0"
 
-set PROVISION_TARGET=
-if [%1]==[] goto :aftertarget
-if EXIST "ansible\hosts\%1" (
-  set PROVISION_TARGET=%1
-  echo Target: %1
-  shift
+::   Absolute path of the project
+set "PROJECT_FOLDER=%~dp0"
+
+::   Relative path of vagrant-ansible-remote to the project
+set "VAGRANT_ANSIBLE_REMOTE=vagrant-ansible-remote"
+
+::   Vagrant name of the machine with Ansible
+if not defined VAGRANT_ANSIBLE_MACHINE (
+  set "VAGRANT_ANSIBLE_MACHINE=ansible-vm"
 )
-:aftertarget
 
-set PROVISION_ACTION=
-if [%1]==[] goto :afteraction
-if EXIST "ansible\%1.yml" (
-  set PROVISION_ACTION=%1
-  echo Action: %1
-  shift
+::   transfer some environment variables
+if not defined ANSIBLE_ENV (
+  set "ANSIBLE_ENV=REMOTE=ON"
 )
-:afteraction
+if defined REPO_USER if "%ANSIBLE_ENV:REPO_USER=%." == "%ANSIBLE_ENV%." (
+  set "ANSIBLE_ENV=REPO_USER=%REPO_USER% %ANSIBLE_ENV%"
+)
+if defined REPO_PASSWORD if "%ANSIBLE_ENV:REPO_PASSWORD=%." == "%ANSIBLE_ENV%." (
+  set "ANSIBLE_ENV=REPO_PASSWORD=%REPO_PASSWORD% %ANSIBLE_ENV%"
+)
+if defined SECRET_KEY_BASE if "%ANSIBLE_ENV:SECRET_KEY_BASE=%." == "%ANSIBLE_ENV%." (
+  set "ANSIBLE_ENV=SECRET_KEY_BASE=%SECRET_KEY_BASE% %ANSIBLE_ENV%"
+)
 
-if [%1]==[] goto :no_args
-set PROVISION_ARGS=%1
-shift
-:loopargs
-if [%1]==[] goto :afterargs
-set PROVISION_ARGS=%PROVISION_ARGS% %1
-shift
-goto :loopargs
-:afterargs
-set PROVISION_ARGS=%PROVISION_ARGS:\=/%
-echo Arguments: %PROVISION_ARGS%
-:no_args
+call "%VAGRANT_ANSIBLE_REMOTE%/remote.bat" %*
 
-echo vagrant provision
-vagrant provision
-
-cd /D "%OLD_CD%"
 ENDLOCAL

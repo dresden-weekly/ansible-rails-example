@@ -1,31 +1,37 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-provision_target = ENV['PROVISION_TARGET'] || 'vagrant' # valid: staging, production
-provision_action = ENV['PROVISION_ACTION'] || 'provision' # valid: deploy, app_restart
-
 Vagrant.configure('2') do |config|
-  config.vm.box = "hashicorp/precise64"
-
-  config.vm.provision :shell, keep_color: true, inline: <<-SHELL_END
-    export REPO_USER=#{ENV['REPO_USER']}
-    export REPO_PASSWORD=#{ENV['REPO_PASSWORD']}
-    export SECRET_KEY_BASE=#{ENV['SECRET_KEY_BASE']}
-    export PROVISION_ARGS=#{ENV['PROVISION_ARGS']}
-    export ANSIBLE_HOST_KEY_CHECKING=False
-    export PYTHONUNBUFFERED=1
-    export ANSIBLE_FORCE_COLOR=1
-    export BASE_FOLDER=/vagrant/ansible
-    export ANSIBLE_DIR=/opt/ansible
-    exec /vagrant/ansible/run.sh #{provision_target} #{provision_action}
-  SHELL_END
-
-  config.vm.network "forwarded_port", guest: 80, host: 8081 # webserver
+  config.vm.box = "ubuntu/trusty64"
   config.vm.network "private_network", type: "dhcp"
-  config.ssh.forward_agent = true
 
-  config.vm.provider "virtualbox" do |v|
-    v.memory = 1024
-    v.cpus = 2
+  # use vagrant-hostmanager plugin
+  #   vagrant plugin install vagrant-hostmanager
+  config.hostmanager.enabled = true
+  config.hostmanager.ip_resolver = proc do |vm, resolving_vm|
+    if vm.id
+      `VBoxManage guestproperty get #{vm.id} "/VirtualBox/GuestInfo/Net/1/V4/IP"`.split()[1]
+    end
+  end
+
+  config.vm.define "itedd-vm" do |itedd|
+    itedd.vm.hostname = "itedd-vm"
+
+    # forwarded ports
+    itedd.vm.network "forwarded_port", guest: 80, host: 8081 # http
+
+    # disable shared folder
+    itedd.vm.synced_folder ".", "/vagrant", disabled: true
+
+    # make machine faster
+    itedd.vm.provider "virtualbox" do |v|
+      v.memory = 1024
+      v.cpus = 2
+    end
+  end
+
+  config.vm.define "ansible-vm", primary: true do |ansible|
+    ansible.vm.hostname = "ansible-vm"
+    ansible.ssh.forward_agent = true
   end
 end
