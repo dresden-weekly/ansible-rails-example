@@ -1,7 +1,7 @@
 
-app_name: example_app
+app_name: itedd
 app_user: deploy
-app_path: /data/example_app
+app_path: /data/itedd
 
 site_id: example
 
@@ -14,8 +14,8 @@ app_secret_key_base: "{{ lookup('env', 'SECRET_KEY_BASE') | default('0edf6fdcbf6
 
 ruby_version: 2.1.1
 
-db_user: example_app
+db_user: itedd
 db_password: secret
-db_name: example_app
+db_name: itedd
 
 allow_vagrant: no
