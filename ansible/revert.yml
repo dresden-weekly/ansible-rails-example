@@ -2,11 +2,11 @@
 - hosts:
   - app
   - web
+  sudo: yes
+  sudo_user: '{{ app_user }}'
+  remote_user: '{{ app_user }}'
 
   vars:
-    remote_user: '{{ app_user }}'
-    sudo: yes
-    sudo_user: '{{ remote_user }}'
     ruby_bin: '~/.rvm/bin/rvm default do '
     profile: '. $HOME/.profile && sh $HOME/.profile && '
     is_vagrant: "{{ 'vagrant' in groups }}"
