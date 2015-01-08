@@ -46,7 +46,7 @@
   - role: dresden-weekly.Rails/rails/update-current
     when: run_deploy | bool
 
-  - role: dresden-weekly.Rails/puma/restart
+  - role: dresden-weekly.Rails/webrick/restart
     when: run_deploy | bool
 
   - role: dresden-weekly.Rails/rails/cleanup-old-releases
