@@ -32,9 +32,14 @@
     when: (run_deploy | bool) and (use_vagrant_folder | bool)
 
   - role: dresden-weekly.Rails/rails/create-release
+    rails_deploy_custom_archive:
+    - Gemfile.lock
     when: (run_deploy | bool) and not (use_vagrant_folder | bool)
 
   - role: dresden-weekly.Rails/rails/tasks/bundle
+    bundle_flags:
+    - '--quiet'
+    - '--deployment'
     when: run_deploy | bool
 
   - role: dresden-weekly.Rails/rails/tasks/migrate-database
