@@ -25,5 +25,5 @@
     when: run_restart | bool
 
   roles:
-  - role: ansible-weekly.Rails/webrick/restart
+  - role: dresden-weekly.Rails/webrick/restart
     when: run_restart | bool
