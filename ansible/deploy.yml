@@ -1,7 +1,6 @@
 ---
 - hosts:
   - app
-  - web
   sudo: yes
   sudo_user: '{{ app_user }}'
   remote_user: '{{ app_user }}'

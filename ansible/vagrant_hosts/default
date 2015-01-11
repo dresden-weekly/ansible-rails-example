@@ -7,11 +7,5 @@ ansible_connection=local
 [itedd_app:children]
 vagrant
 
-[db:children]
-vagrant
-
 [app:children]
-vagrant
-
-[web:children]
 vagrant

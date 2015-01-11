@@ -7,11 +7,5 @@ ansible_ssh_user=vagrant
 [itedd_app:children]
 vagrant
 
-[db:children]
-vagrant
-
 [app:children]
-vagrant
-
-[web:children]
 vagrant
