@@ -1,5 +1,7 @@
 [vagrant]
 itedd-vm
+db-vm
+web-vm
 
 [vagrant:vars]
 ansible_ssh_user=vagrant
@@ -7,11 +9,11 @@ ansible_ssh_user=vagrant
 [itedd_app:children]
 vagrant
 
-[db:children]
-vagrant
+[db]
+db-vm
 
-[app:children]
-vagrant
+[app]
+itedd-vm
 
-[web:children]
-vagrant
+[web]
+web-vm

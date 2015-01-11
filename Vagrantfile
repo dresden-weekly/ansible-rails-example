@@ -17,9 +17,6 @@ Vagrant.configure('2') do |config|
   config.vm.define "itedd-vm" do |itedd|
     itedd.vm.hostname = "itedd-vm"
 
-    # forwarded ports
-    itedd.vm.network "forwarded_port", guest: 80, host: 8081 # http
-
     # disable shared folder
     itedd.vm.synced_folder ".", "/vagrant", disabled: true
 
@@ -28,6 +25,23 @@ Vagrant.configure('2') do |config|
       v.memory = 1024
       v.cpus = 2
     end
+  end
+
+  config.vm.define "db-vm" do |db|
+    db.vm.hostname = "db-vm"
+
+    # disable shared folder
+    db.vm.synced_folder ".", "/vagrant", disabled: true
+  end
+
+  config.vm.define "web-vm" do |web|
+    web.vm.hostname = "web-vm"
+
+    # forwarded ports
+    web.vm.network "forwarded_port", guest: 80, host: 8081 # http
+
+    # disable shared folder
+    web.vm.synced_folder ".", "/vagrant", disabled: true
   end
 
   config.vm.define "ansible-vm", primary: true do |ansible|

@@ -16,6 +16,10 @@
 - hosts: app
   sudo: yes
   roles:
+  - role: dresden-weekly.Rails/ssh_agent
+    run_once: yes
+    delegate_to: 127.0.0.1
+
   - role: dresden-weekly.Rails/create-user
     user:
       <<: *app_user
@@ -42,7 +46,6 @@
   - role: dresden-weekly.Rails/create-user
     user: *app_user
   - dresden-weekly.Rails/rails/create-folders
-  - dresden-weekly.Rails/ruby/rvm # required to compile assets
   - dresden-weekly.Rails/nginx/server
   - dresden-weekly.Rails/nginx/webrick
 

@@ -2,30 +2,35 @@
 - hosts:
   - app
   - web
-  sudo: yes
-  sudo_user: '{{ app_user }}'
-  remote_user: '{{ app_user }}'
-
   vars:
-    ruby_bin: '~/.rvm/bin/rvm default do '
-    profile: '. $HOME/.profile && /bin/bash $HOME/.profile && '
     was_provisioned: "{{ provisioned if provisioned is defined else false }}"
     was_allow_vagrant: "{{ allow_vagrant if allow_vagrant is defined else false }}"
     is_vagrant: "{{ 'vagrant' in groups }}"
 
-  pre_tasks:
+  tasks:
   - name: Check previous deploy
     stat:
       path: "{{ app_path }}/current"
     register: deploy_current
+    run_once: on # make sure we have a consistent RELEASE_ID
+    delegate_to: "{{ groups['app'][0] }}"
 
   - set_fact:
       not_provisioned: "{{ not (was_provisioned | bool) }}"
       use_vagrant_folder: "{{ (was_allow_vagrant | bool) and (is_vagrant | bool) and (was_provisioned | bool) }}"
-      is_first_deploy: "{{ not deploy_current.stat.exists }}"
+      is_first_deploy: "{{ not hostvars[groups['app'][0]].deploy_current.stat.exists }}"
 
   - set_fact:
       run_deploy: "{{ (is_first_deploy | bool) or (not_provisioned | bool) or (use_vagrant_folder | bool) }}"
+      profile: '. $HOME/.profile && /bin/bash $HOME/.profile && '
+      ruby_bin: '~/.rvm/bin/rvm default do '
+
+- hosts:
+  - app
+  sudo: yes
+  sudo_user: '{{ app_user }}'
+  remote_user: '{{ app_user }}'
+  gather_facts: no
 
   roles:
   - role: dresden-weekly.Rails/rails/use-vagrant
@@ -48,11 +53,47 @@
   - role: dresden-weekly.Rails/rails/tasks/compile-assets
     when: run_deploy | bool
 
+- hosts:
+  - web
+  sudo: yes
+  sudo_user: '{{ app_user }}'
+  remote_user: '{{ app_user }}'
+
+  roles:
+  - role: dresden-weekly.Rails/rails/publish-assets
+    when: run_deploy | bool
+
+- hosts:
+  - app
+  - web
+  sudo: yes
+  sudo_user: '{{ app_user }}'
+  remote_user: '{{ app_user }}'
+  gather_facts: no
+
+  roles:
   - role: dresden-weekly.Rails/rails/update-current
     when: run_deploy | bool
 
+- hosts:
+  - app
+  sudo: yes
+  sudo_user: '{{ app_user }}'
+  remote_user: '{{ app_user }}'
+  gather_facts: no
+
+  roles:
   - role: dresden-weekly.Rails/webrick/restart
     when: run_deploy | bool
 
+- hosts:
+  - app
+  - web
+  sudo: yes
+  sudo_user: '{{ app_user }}'
+  remote_user: '{{ app_user }}'
+  gather_facts: no
+
+  roles:
   - role: dresden-weekly.Rails/rails/cleanup-old-releases
     when: run_deploy | bool
