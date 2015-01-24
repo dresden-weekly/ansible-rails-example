@@ -1,0 +1,6 @@
+rails_env: production
+
+app_domain: "{{ ansible_all_ipv4_addresses | last }}"
+
+bundle_without:
+- test
