@@ -5,6 +5,7 @@ Vagrant.configure('2') do |config|
   config.vm.box = "ubuntu/trusty64"
   config.vm.network "private_network", type: "dhcp"
   config.vm.synced_folder ".", "/vagrant", :mount_options => ["fmode=666"]
+  config.ssh.insert_key = false
 
   # use vagrant-hostmanager plugin
   #   vagrant plugin install vagrant-hostmanager
