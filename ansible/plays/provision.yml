@@ -6,11 +6,11 @@
   - role: dresden-weekly.Rails/create-user
     user:
       name: "{{ app_user }}"
-      shell: /bin/bash
-      authorized_key: "{{ lookup('file', '../id_rsa.pub') }}"
+      authorized_keys:
+      - "{{ lookup('file', '../id_rsa.pub') }}"
       bashrc_lines:
-      - "cd {{ app_path }}"
-      - "cd {{ app_path }}/current"
+      - "cd {{ app_path }} || true"
+      - "cd {{ app_path }}/current || true"
       env:
         SECRET_KEY_BASE: "{{ app_secret_key_base }}"
         RAILS_LOG_FILE_PATH: "{{ app_path }}/shared/log/"
