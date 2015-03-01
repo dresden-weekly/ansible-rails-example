@@ -3,12 +3,16 @@
   sudo: yes
   vars:
     _: &app_user
-      name: "{{ app_user }}"
-      authorized_keys:
+    - name: "{{ app_user }}"
+      groups:
+      - 'www-data'
+      comment: "itedd Application"
+      sshkeys:
       - "{{ lookup('file', '../id_rsa.pub') }}"
-      bashrc_lines:
-      - "cd {{ app_path }} || true"
-      - "cd {{ app_path }}/current || true"
+
+    __: &bashrc_lines
+    - "cd {{ app_path }} || true"
+    - "cd {{ app_path }}/current || true"
 
   roles:
   - dresden-weekly.Rails/postgresql
@@ -20,21 +24,30 @@
     run_once: yes
     delegate_to: 127.0.0.1
 
-  - role: dresden-weekly.Rails/create-user
-    user:
-      <<: *app_user
-      env:
-        SECRET_KEY_BASE: "{{ app_secret_key_base }}"
-        RAILS_LOG_FILE_PATH: "{{ app_path }}/shared/log/"
-      env_facts:
-      - group: db
-        index: 0
-        facts:
-        - DATABASE_URL
-  - dresden-weekly.Rails/rails/create-folders
-  - dresden-weekly.Rails/rails/logrotate
+  - role: debops.users
+    users: yes
+    users_list: *app_user
+
   - dresden-weekly.Rails/ruby/rvm
   - dresden-weekly.Rails/ruby/postgresql
+  - dresden-weekly.Rails/ruby/sqlite3
+
+  - dresden-weekly.Rails/rails/folders
+  - dresden-weekly.Rails/rails/logrotate
+
+  - role: dresden-weekly.Rails/user/profile
+    rails_user_name: "{{ app_user }}"
+    rails_user_bashrc_lines: *bashrc_lines
+    rails_user_env:
+      RAILS_ENV: "{{ rails_env }}"
+      SECRET_KEY_BASE: "{{ app_secret_key_base }}"
+      RAILS_LOG_FILE_PATH: "{{ app_path }}/shared/log/"
+    rails_user_env_facts:
+    - group: db
+      index: 0
+      facts:
+      - DATABASE_URL
+
   - role: dresden-weekly.Rails/upstart/userjobs
     users:
     - "{{ app_user }}"
@@ -43,9 +56,18 @@
 - hosts: web
   sudo: yes
   roles:
-  - role: dresden-weekly.Rails/create-user
-    user: *app_user
-  - dresden-weekly.Rails/rails/create-folders
+  - role: debops.users
+    users: yes
+    users_list: *app_user
+
+  - role: dresden-weekly.Rails/user/profile
+    rails_user_name: "{{ app_user }}"
+    rails_user_bashrc_lines: *bashrc_lines
+    rails_user_env:
+      SECRET_KEY_BASE: "{{ app_secret_key_base }}"
+      RAILS_LOG_FILE_PATH: "{{ app_path }}/shared/log/"
+
+  - dresden-weekly.Rails/rails/folders
   - dresden-weekly.Rails/nginx/server
   - dresden-weekly.Rails/nginx/webrick
 

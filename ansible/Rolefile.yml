@@ -7,3 +7,6 @@
 - src: "https://github.com/dresden-weekly/ansible-rails"
   version: develop
   name: dresden-weekly.Rails
+
+- src: "debops.users"
+  version: "v0.1.0"

@@ -6,8 +6,7 @@
   remote_user: '{{ app_user }}'
 
   vars:
-    ruby_bin: '~/.rvm/bin/rvm default do '
-    profile: '. $HOME/.profile && sh $HOME/.profile && '
+    profile: '/bin/bash -lc -- '
 
   pre_tasks:
   - name: Check previous deploy
@@ -20,7 +19,7 @@
 
   - name: Trigger restart
     file:
-      path: "{{ app_path }}/restart.txt"
+      path: "{{ app_path }}/shared/tmp/restart.txt"
       state: touch
     when: run_restart | bool
 
