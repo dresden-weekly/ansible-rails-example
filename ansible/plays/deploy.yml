@@ -7,8 +7,7 @@
   remote_user: '{{ app_user }}'
 
   vars:
-    ruby_bin: '~/.rvm/bin/rvm default do '
-    profile: '. $HOME/.profile && /bin/bash $HOME/.profile && '
+    profile: '/bin/bash -lc -- '
     was_provisioned: "{{ provisioned if provisioned is defined else false }}"
     was_allow_vagrant: "{{ allow_vagrant if allow_vagrant is defined else false }}"
     is_vagrant: "{{ 'vagrant' in groups }}"
@@ -18,16 +17,24 @@
     stat:
       path: "{{ app_path }}/current"
     register: deploy_current
+    tags:
+    - facts
 
   - set_fact:
       not_provisioned: "{{ not (was_provisioned | bool) }}"
       use_vagrant_folder: "{{ (was_allow_vagrant | bool) and (is_vagrant | bool) and (was_provisioned | bool) }}"
       is_first_deploy: "{{ not deploy_current.stat.exists }}"
+    tags:
+    - facts
 
   - set_fact:
       run_deploy: "{{ (is_first_deploy | bool) or (not_provisioned | bool) or (use_vagrant_folder | bool) }}"
+    tags:
+    - facts
 
   roles:
+  - dresden-weekly.Rails/rails/folders
+
   - role: dresden-weekly.Rails/rails/use-vagrant
     when: (run_deploy | bool) and (use_vagrant_folder | bool)
 

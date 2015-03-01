@@ -7,8 +7,7 @@
   remote_user: '{{ app_user }}'
 
   vars:
-    ruby_bin: '~/.rvm/bin/rvm default do '
-    profile: '. $HOME/.profile && sh $HOME/.profile && '
+    profile: '/bin/bash -lc -- '
     is_vagrant: "{{ 'vagrant' in groups }}"
 
   pre_tasks:
