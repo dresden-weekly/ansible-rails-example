@@ -36,7 +36,7 @@
   - role: dresden-weekly.Rails/upstart/userjobs
     users:
     - "{{ app_user }}"
-  - dresden-weekly.Rails/webrick/upstart
+  - dresden-weekly.Rails/webrick/service
   - dresden-weekly.Rails/nginx/server
   - dresden-weekly.Rails/nginx/webrick
 
