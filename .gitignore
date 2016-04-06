@@ -3,3 +3,5 @@ ansible/.ansible/
 ansible/.roles/
 ansible/.remember
 ansible/id_rsa.pub
+ansible/roles/
+.vagrant-file.rb
