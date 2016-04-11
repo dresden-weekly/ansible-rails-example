@@ -2,15 +2,7 @@
 - hosts: db
   become: yes
   vars:
-    _: &app_user
-    - name: "{{ app_user }}"
-      groups:
-      - 'www-data'
-      comment: "itedd Application"
-      sshkeys:
-      - "{{ lookup('file', '../id_rsa.pub') }}"
-
-    __: &bashrc_lines
+    _: &bashrc_lines
     - "cd {{ app_path }} || true"
     - "cd {{ app_path }}/current || true"
 
