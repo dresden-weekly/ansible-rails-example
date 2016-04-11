@@ -1,19 +1,15 @@
 ---
 - hosts: app
-  sudo: yes
+  become: yes
+
+  pre_tasks:
+    - user:
+        name:   "{{ app_user }}"
+        groups: "www-data"
+        state:  "present"
 
   roles:
   - dresden-weekly.Rails/postgresql
-
-  - role: debops.users
-    users: yes
-    users_list:
-      - name: "{{ app_user }}"
-        groups:
-        - 'www-data'
-        sshkeys:
-        - "{{ lookup('file', '../id_rsa.pub') }}"
-        state: 'present'
 
   - dresden-weekly.Rails/ruby/rvm
   - dresden-weekly.Rails/ruby/postgresql
@@ -41,7 +37,5 @@
   - dresden-weekly.Rails/nginx/webrick
 
 - include: deploy.yml
-  sudo: yes
-  sudo_user: "{{ app_user }}"
   vars:
     provisioned: yes
