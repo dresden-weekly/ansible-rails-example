@@ -2,8 +2,8 @@
 - hosts:
   - app
   - web
-  sudo: yes
-  sudo_user: '{{ app_user }}'
+  become: yes
+  become_user: '{{ app_user }}'
   remote_user: '{{ app_user }}'
 
   vars:
