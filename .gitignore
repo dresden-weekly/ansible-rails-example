@@ -1,7 +1,9 @@
-.vagrant
 ansible/.ansible/
 ansible/.roles/
 ansible/.remember
 ansible/id_rsa.pub
+ansible/roles/
+.vagrant
+.vagrant-file.rb
 *.retry
 *.log
