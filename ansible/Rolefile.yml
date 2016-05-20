@@ -1,12 +1,9 @@
 ---
 # stable version from Ansible Galaxy
 # - src: "dresden-weekly.Rails"
-#   version: "0.1"
+#   version: "0.3"
 
 # development version from Github
 - src: "https://github.com/dresden-weekly/ansible-rails"
   version: develop
   name: dresden-weekly.Rails
-
-- src: "debops.users"
-  version: "v0.1.0"

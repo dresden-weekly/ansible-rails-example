@@ -12,7 +12,7 @@ git_branch: master
 
 app_secret_key_base: "{{ lookup('env', 'SECRET_KEY_BASE') | default('0edf6fdcbf610f5ad59c665d15deb17af10ff7b40e8a918f928771f885cfbdec', true) }}"
 
-ruby_version: 2.1.1
+ruby_version: 2.1.7
 
 db_user: itedd
 db_password: secret
