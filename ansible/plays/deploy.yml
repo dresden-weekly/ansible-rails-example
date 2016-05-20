@@ -35,8 +35,8 @@
 
 - hosts:
   - app
-  sudo: yes
-  sudo_user: '{{ app_user }}'
+  become: yes
+  become_user: '{{ app_user }}'
   remote_user: '{{ app_user }}'
   gather_facts: no
 
@@ -63,8 +63,8 @@
 
 - hosts:
   - web
-  sudo: yes
-  sudo_user: '{{ app_user }}'
+  become: yes
+  become_user: '{{ app_user }}'
   remote_user: '{{ app_user }}'
 
   roles:
@@ -74,8 +74,8 @@
 - hosts:
   - app
   - web
-  sudo: yes
-  sudo_user: '{{ app_user }}'
+  become: yes
+  become_user: '{{ app_user }}'
   remote_user: '{{ app_user }}'
   gather_facts: no
 
@@ -85,8 +85,8 @@
 
 - hosts:
   - app
-  sudo: yes
-  sudo_user: '{{ app_user }}'
+  become: yes
+  become_user: '{{ app_user }}'
   remote_user: '{{ app_user }}'
   gather_facts: no
 
@@ -97,8 +97,8 @@
 - hosts:
   - app
   - web
-  sudo: yes
-  sudo_user: '{{ app_user }}'
+  become: yes
+  become_user: '{{ app_user }}'
   remote_user: '{{ app_user }}'
   gather_facts: no
 

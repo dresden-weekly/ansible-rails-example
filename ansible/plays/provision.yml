@@ -1,16 +1,8 @@
 ---
 - hosts: db
-  sudo: yes
+  become: yes
   vars:
-    _: &app_user
-    - name: "{{ app_user }}"
-      groups:
-      - 'www-data'
-      comment: "itedd Application"
-      sshkeys:
-      - "{{ lookup('file', '../id_rsa.pub') }}"
-
-    __: &bashrc_lines
+    _: &bashrc_lines
     - "cd {{ app_path }} || true"
     - "cd {{ app_path }}/current || true"
 
@@ -18,15 +10,18 @@
   - dresden-weekly.Rails/postgresql
 
 - hosts: app
-  sudo: yes
+  become: yes
+
+  pre_tasks:
+    - user:
+        name: "{{ app_user }}"
+        groups: "www-data"
+        state: "present"
+
   roles:
   - role: dresden-weekly.Rails/ssh_agent
     run_once: yes
     delegate_to: 127.0.0.1
-
-  - role: debops.users
-    users: yes
-    users_list: *app_user
 
   - dresden-weekly.Rails/ruby/rvm
   - dresden-weekly.Rails/ruby/postgresql
@@ -51,15 +46,18 @@
   - role: dresden-weekly.Rails/upstart/userjobs
     users:
     - "{{ app_user }}"
-  - dresden-weekly.Rails/webrick/upstart
+  - dresden-weekly.Rails/webrick/service
 
 - hosts: web
-  sudo: yes
-  roles:
-  - role: debops.users
-    users: yes
-    users_list: *app_user
+  become: yes
 
+  pre_tasks:
+    - user:
+        name: "{{ app_user }}"
+        groups: "www-data"
+        state: "present"
+
+  roles:
   - role: dresden-weekly.Rails/user/profile
     rails_user_name: "{{ app_user }}"
     rails_user_bashrc_lines: *bashrc_lines
@@ -72,7 +70,5 @@
   - dresden-weekly.Rails/nginx/webrick
 
 - include: deploy.yml
-  sudo: yes
-  sudo_user: "{{ app_user }}"
   vars:
     provisioned: yes
